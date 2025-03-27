@@ -1,0 +1,131 @@
+{% extends "image_sharing_app/base.html" %} {% load crispy_forms_tags %} 
+{% block title %}{{ image.title }} - ImageShare{% endblock %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <img
+        src="{{ image.image.url }}"
+        class="card-img-top"
+        alt="{{ image.title }}"
+      />
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-3">
+          <img src="{{ image.author.profile.get_avatar_url }}" alt="Author Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+          <div>
+            <h5 class="card-title mb-0">{{ image.title }}</h5>
+            <small class="text-muted">
+              By <a href="{% url 'user_profile' image.author.username %}" class="text-decoration-none">{{ image.author.username }}</a>
+              on {{ image.created_at|date:"F j, Y" }}
+            </small>
+          </div>
+        </div>
+        {% if user == image.author %}
+        <div class="mb-3">
+          <a href="{% url 'edit_image' image.pk %}" class="btn btn-primary btn-sm me-2">
+            <i class="fas fa-edit"></i> Edit
+          </a>
+          <a href="{% url 'delete_image' image.pk %}" class="btn btn-danger btn-sm">
+            <i class="fas fa-trash"></i> Delete
+          </a>
+        </div>
+        {% endif %}
+        {% if image.description %}
+        <p class="card-text">{{ image.description }}</p>
+        {% endif %}
+        <div class="d-flex align-items-center">
+          <button
+            class="btn btn-link p-0 me-2 like-btn {% if user in image.likes.all %}liked{% endif %}"
+            data-image-id="{{ image.id }}"
+          >
+            <i class="fas fa-heart"></i>
+            <span class="like-count">{{ image.total_likes }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Comments</h5>
+      </div>
+      <div class="card-body">
+        {% if user.is_authenticated %}
+        <form method="POST" class="mb-4">
+          {% csrf_token %} {{ comment_form|crispy }}
+          <button type="submit" class="btn btn-primary">Post Comment</button>
+        </form>
+        {% else %}
+        <p class="text-center">
+          Please <a href="{% url 'login' %}">login</a> to leave a comment.
+        </p>
+        {% endif %}
+
+        <div class="comments-list">
+          {% for comment in comments %}
+          <div class="comment mb-3">
+            <div class="d-flex align-items-center mb-2">
+              <img src="{{ comment.author.profile.get_avatar_url }}" alt="Commenter Avatar" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
+              <a
+                href="{% url 'user_profile' comment.author.username %}"
+                class="text-decoration-none"
+              >
+                <strong>{{ comment.author.username }}</strong>
+              </a>
+              <small class="text-muted ms-2"
+                >{{ comment.created_at|timesince }} ago</small
+              >
+            </div>
+            <p class="mb-0">{{ comment.content }}</p>
+          </div>
+          {% empty %}
+          <p class="text-center text-muted">
+            No comments yet. Be the first to comment!
+          </p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+$(document).ready(function () {
+    $(".like-btn").click(function () {
+        const imageId = $(this).data("image-id");
+        const $btn = $(this);
+        const $count = $btn.find(".like-count");
+
+        $.ajax({
+            url: `/image/${imageId}/like/`,
+            method: "POST",
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            success: function (response) {
+                $btn.toggleClass("liked");
+                $count.text(response.total_likes);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

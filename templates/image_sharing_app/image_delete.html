@@ -1,0 +1,26 @@
+{% extends "image_sharing_app/base.html" %}
+
+{% block title %}Delete Image - ImageShare{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Delete Image</h3>
+                <p class="card-text">Are you sure you want to delete "{{ image.title }}"?</p>
+                <div class="mb-3">
+                    <img src="{{ image.image.url }}" class="img-fluid rounded" alt="{{ image.title }}">
+                </div>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'image_detail' image.pk %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-danger">Delete Image</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

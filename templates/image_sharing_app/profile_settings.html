@@ -1,0 +1,111 @@
+{% extends "image_sharing_app/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Profile Settings - ImageShare{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Profile Settings</h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <img src="{{ user.profile.get_avatar_url }}" alt="Profile Avatar" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                    <h4>{{ user.username }}</h4>
+                </div>
+                <form method="POST" enctype="multipart/form-data" id="profile-form">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form.username|as_crispy_field }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.email|as_crispy_field }}
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h6 class="mb-3">Profile Picture</h6>
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                {{ form.avatar|as_crispy_field }}
+                            </div>
+                            <div class="ms-3">
+                                <button type="button" class="btn btn-outline-secondary" id="clear-avatar">
+                                    <i class="fas fa-times"></i> Clear
+                                </button>
+                            </div>
+                        </div>
+                        <small class="text-muted">Maximum file size: 5MB. Supported formats: JPG, PNG, GIF</small>
+                    </div>
+                    {{ form.bio|as_crispy_field }}
+
+                    <hr class="my-4">
+
+                    <h6 class="mb-3">Change Password</h6>
+                    <div class="row">
+                        <div class="col-md-4">
+                            {{ form.current_password|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.new_password|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.confirm_password|as_crispy_field }}
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const clearButton = document.getElementById('clear-avatar');
+    const avatarInput = document.querySelector('input[type="file"]');
+    
+    if (clearButton && avatarInput) {
+        clearButton.addEventListener('click', function() {
+            avatarInput.value = '';
+            // Show success message
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-success alert-dismissible fade show mt-2';
+            alert.innerHTML = `
+                Avatar cleared. Click "Save Changes" to apply.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            avatarInput.parentNode.appendChild(alert);
+        });
+    }
+
+    // Preview avatar before upload
+    if (avatarInput) {
+        avatarInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.querySelector('.rounded-circle');
+                    if (preview) {
+                        preview.src = e.target.result;
+                    }
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+});
+</script>
+{% endblock %} 
