@@ -10,9 +10,19 @@
             <div class="card-body">
                 <h5 class="card-title">{{ image.title }}</h5>
                 <p class="card-text">{{ image.description|truncatewords:30 }}</p>
-                <p class="card-text">
+                <p class="card-text user-info">
                     <small class="text-muted">
-                        By <a href="{% url 'user_profile' image.author.username %}">{{ image.author.username }}</a>
+                        <a href="{% url 'user_profile' image.author.username %}" class="author-link" style="display: inline-flex; align-items: center;">
+                            <span style="display: inline-block; width: 30px; height: 30px; margin-right: 5px; vertical-align: middle;">
+                                {% if image.author.profile.avatar %}
+                                <img src="{{ image.author.profile.avatar.url }}" alt="{{ image.author.username }}" 
+                                     style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">
+                                {% else %}
+                                <i class="fas fa-user-circle" style="font-size: 30px; color: #6c757d;"></i>
+                                {% endif %}
+                            </span>
+                            <span style="display: inline-block; vertical-align: middle;">{{ image.author.username }}</span>
+                        </a>
                         on {{ image.created_at|date:"F j, Y" }}
                     </small>
                 </p>

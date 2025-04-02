@@ -8,6 +8,54 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
+/* Grayscale Light Theme */
+body {
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+/* Gray buttons instead of blue */
+.btn-primary {
+  background-color: #505050 !important;
+  border-color: #404040 !important;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: #404040 !important;
+  border-color: #303030 !important;
+}
+
+/* Gray links instead of blue */
+a {
+  color: #505050;
+}
+
+a:hover {
+  color: #303030;
+}
+
+/* Gray card headers */
+.card-header {
+  background-color: #e9ecef !important;
+}
+
+/* Gray borders */
+.card {
+  border-color: #ddd !important;
+}
+
+/* Gray navbar */
+.navbar-dark {
+  background-color: #343a40 !important;
+}
+
+/* Profile stats in gray */
+.profile-stats {
+  background-color: #e9ecef;
+  border-radius: 10px;
+  padding: 20px;
+}
+
 /* Image styling */
 .image-card img {
   width: 100%;
@@ -49,16 +97,9 @@
 
 /* Comment section styling */
 .comment {
-  border-left: 3px solid #007bff;
+  border-left: 3px solid #505050;
   padding-left: 15px;
   margin-bottom: 15px;
-}
-
-/* Profile stats */
-.profile-stats {
-  background-color: #f8f9fa;
-  border-radius: 10px;
-  padding: 20px;
 }
 
 /* Search bar styling */
@@ -90,4 +131,225 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+/* Dark Mode Styles - With increased specificity */
+html body.dark-mode {
+  background-color: #121212 !important;
+  color: #e0e0e0 !important;
+}
+
+/* Dark mode navbar */
+html body.dark-mode .navbar {
+  background-color: #1e1e1e !important;
+}
+
+/* Dark mode cards */
+html body.dark-mode .card {
+  background-color: #1e1e1e !important;
+  color: #e0e0e0 !important;
+  border-color: #333 !important;
+}
+
+html body.dark-mode .card-header {
+  background-color: #252525 !important;
+  border-color: #333 !important;
+}
+
+html body.dark-mode .card-body {
+  background-color: #1e1e1e !important;
+}
+
+/* Dark mode form controls */
+html body.dark-mode .form-control {
+  background-color: #2a2a2a !important;
+  border-color: #444 !important;
+  color: #e0e0e0 !important;
+}
+
+html body.dark-mode .form-control:focus {
+  background-color: #333 !important;
+  border-color: #555 !important;
+  color: #fff !important;
+}
+
+/* Dark mode buttons */
+html body.dark-mode .btn-primary {
+  background-color: #375a7f !important;
+  border-color: #375a7f !important;
+}
+
+html body.dark-mode .btn-outline-secondary {
+  color: #bbb !important;
+  border-color: #555 !important;
+}
+
+html body.dark-mode .btn-outline-secondary:hover {
+  background-color: #333 !important;
+  color: #fff !important;
+}
+
+/* Dark mode tables */
+html body.dark-mode .table {
+  color: #e0e0e0;
+}
+
+html body.dark-mode .table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: #252525;
+}
+
+/* Dark mode pagination */
+html body.dark-mode .pagination .page-link {
+  background-color: #2a2a2a;
+  border-color: #444;
+  color: #e0e0e0;
+}
+
+html body.dark-mode .pagination .page-item.active .page-link {
+  background-color: #375a7f;
+  border-color: #375a7f;
+}
+
+/* Dark mode text colors */
+html body.dark-mode .text-muted {
+  color: #bdbdbd !important;
+}
+
+/* Ensure all small text is visible in dark mode */
+html body.dark-mode small, 
+html body.dark-mode .small {
+  color: #bdbdbd !important;
+}
+
+/* Make sure labels and form hints are visible */
+html body.dark-mode label,
+html body.dark-mode .form-text,
+html body.dark-mode .form-label,
+html body.dark-mode .col-form-label {
+  color: #e0e0e0 !important;
+}
+
+/* Fix visibility of help text */
+html body.dark-mode .text-help,
+html body.dark-mode .text-secondary {
+  color: #bdbdbd !important;
+}
+
+/* Ensure link color applies to all states */
+html body.dark-mode a:not(.btn):not(.nav-link):not(.page-link) {
+  color: #8cb2ff !important;
+}
+
+html body.dark-mode a:not(.btn):not(.nav-link):not(.page-link):hover {
+  color: #a8c5ff !important;
+}
+
+/* Dark mode alerts */
+html body.dark-mode .alert {
+  background-color: #2d2d2d;
+  border-color: #444;
+  color: #e0e0e0;
+}
+
+/* Dark mode profile stats */
+html body.dark-mode .profile-stats {
+  background-color: #2a2a2a;
+}
+
+/* Dark mode scrollbar */
+html body.dark-mode ::-webkit-scrollbar-track {
+  background: #2a2a2a;
+}
+
+html body.dark-mode ::-webkit-scrollbar-thumb {
+  background: #555;
+}
+
+html body.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+/* User avatar styles */
+.user-avatar {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+.avatar-sm {
+  width: 16px !important;
+  height: 16px !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+  display: inline-block !important;
+}
+
+.avatar-icon {
+  font-size: 14px !important;
+  color: #6c757d;
+  display: inline-block !important;
+}
+
+.author-link {
+  display: inline-flex !important;
+  align-items: center !important;
+  text-decoration: none;
+}
+
+.author-link:hover {
+  text-decoration: underline;
+}
+
+.user-info {
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+/* Dark mode avatar styling */
+html body.dark-mode .avatar-icon {
+  color: #aaa;
+}
+
+/* Profile page styling */
+.bio-text, .member-since, .stat-label {
+  color: #6c757d;
+}
+
+html body.dark-mode .bio-text,
+html body.dark-mode .member-since,
+html body.dark-mode .stat-label {
+  color: #bdbdbd !important;
+}
+
+/* File upload info text */
+.file-info {
+  font-size: 0.875rem;
+  color: #6c757d;
+  margin-top: 0.25rem;
+}
+
+html body.dark-mode .file-info {
+  color: #bdbdbd !important;
+}
+
+/* Image detail page styles */
+.author-info {
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+.comment-time {
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+.no-comments-text {
+  color: #6c757d;
+}
+
+html body.dark-mode .author-info,
+html body.dark-mode .comment-time,
+html body.dark-mode .no-comments-text {
+  color: #bdbdbd !important;
 }

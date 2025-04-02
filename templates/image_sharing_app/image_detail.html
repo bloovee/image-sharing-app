@@ -13,10 +13,10 @@
           <img src="{{ image.author.profile.get_avatar_url }}" alt="Author Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
           <div>
             <h5 class="card-title mb-0">{{ image.title }}</h5>
-            <small class="text-muted">
+            <div class="author-info">
               By <a href="{% url 'user_profile' image.author.username %}" class="text-decoration-none">{{ image.author.username }}</a>
               on {{ image.created_at|date:"F j, Y" }}
-            </small>
+            </div>
           </div>
         </div>
         {% if user == image.author %}
@@ -72,14 +72,12 @@
               >
                 <strong>{{ comment.author.username }}</strong>
               </a>
-              <small class="text-muted ms-2"
-                >{{ comment.created_at|timesince }} ago</small
-              >
+              <span class="comment-time ms-2">{{ comment.created_at|timesince }} ago</span>
             </div>
             <p class="mb-0">{{ comment.content }}</p>
           </div>
           {% empty %}
-          <p class="text-center text-muted">
+          <p class="text-center no-comments-text">
             No comments yet. Be the first to comment!
           </p>
           {% endfor %}

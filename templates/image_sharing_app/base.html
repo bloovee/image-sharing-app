@@ -41,9 +41,65 @@
       .like-btn.liked {
         color: #dc3545;
       }
+      /* Theme toggle button */
+      .theme-toggle {
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 20px;
+        margin-right: 10px;
+        display: flex;
+        align-items: center;
+      }
+      .theme-toggle i {
+        font-size: 1.2rem;
+        margin-right: 5px;
+      }
+      
+      /* Light mode grayscale overrides */
+      body:not(.dark-mode) .btn-outline-light {
+        color: #fff;
+        border-color: #6c757d;
+        background-color: #6c757d;
+      }
+      
+      body:not(.dark-mode) .btn-outline-light:hover {
+        color: #fff;
+        background-color: #5a6268;
+        border-color: #545b62;
+      }
+      
+      /* Inline dark mode styles */
+      body.dark-mode {
+        background-color: #121212 !important;
+        color: #e0e0e0 !important;
+      }
+      body.dark-mode .navbar {
+        background-color: #1e1e1e !important;
+      }
+      body.dark-mode .card {
+        background-color: #1e1e1e !important;
+        color: #e0e0e0 !important;
+        border-color: #333 !important;
+      }
+      body.dark-mode .card-header {
+        background-color: #252525 !important;
+        border-color: #333 !important;
+      }
+      body.dark-mode .card-body {
+        background-color: #1e1e1e !important;
+      }
+      body.dark-mode .form-control {
+        background-color: #2a2a2a !important;
+        border-color: #444 !important;
+        color: #e0e0e0 !important;
+      }
+      body.dark-mode .btn-primary {
+        background-color: #375a7f !important;
+        border-color: #375a7f !important;
+      }
     </style>
   </head>
-  <body>
+  <body class="dark-mode">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
         <a class="navbar-brand" href="{% url 'home' %}">ImageShare</a>
@@ -69,6 +125,10 @@
             </li>
             {% endif %}
           </ul>
+          <div class="theme-toggle btn btn-outline-light">
+            <i class="fas fa-sun"></i>
+            <span>Light Mode</span>
+          </div>
           <form
             class="d-flex me-2"
             action="{% url 'search' %}"
@@ -115,6 +175,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Theme JS -->
+    <script src="{% static 'js/theme.js' %}"></script>
     {% block extra_js %}{% endblock %}
   </body>
 </html>
