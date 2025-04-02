@@ -7,7 +7,7 @@ A modern image sharing application built with Django, featuring user authenticat
 - User authentication (login, register, logout)
 - Image upload and management
 - User profiles
-- Image likes and interactions
+- Image likes and comments
 - Responsive design with Bootstrap
 - Search functionality
 - AWS S3 integration for media storage (in production)
@@ -21,31 +21,17 @@ A modern image sharing application built with Django, featuring user authenticat
 ## Project Structure
 
 ```
-django-imagesharing-app/
-├── images/                 # Main Django app
+image-sharing-app/
+├── image_sharing_app/     # Main Django app
 ├── templates/             # HTML templates
-├── static/               # Static files
-├── media/                # User uploaded files (not version controlled)
-├── nginx/                # Nginx configuration
+├── static/                # Static files
+├── media/                 # User uploaded files (not version controlled)
+├── nginx/                 # Nginx configuration
+├── config/                # Django project settings
 ├── docker-compose.local.yml  # Local development setup
 ├── docker-compose.prod.yml   # Production setup
-├── .env.local           # Local environment variables
-├── .env.prod            # Production environment variables
-└── requirements.txt     # Python dependencies
+└── requirements.txt       # Python dependencies
 ```
-
-## Data Persistence
-
-The application uses Docker volumes for data persistence:
-- `django-imagesharing-app_media`: Stores user-uploaded images and files
-- `django-imagesharing-app_static`: Stores collected static files
-- `django-imagesharing-app_db`: Stores the PostgreSQL database data
-
-Important notes:
-- Volume data is not pushed to GitHub
-- Each developer needs to set up their own volumes locally
-- In production, use proper backup strategies for volume data
-- For development, you can use `docker-compose down -v` to reset all data
 
 ## Getting Started
 
@@ -54,7 +40,7 @@ Important notes:
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd django-imagesharing-app
+cd image-sharing-app
 ```
 
 2. Create and configure environment files:
@@ -79,56 +65,7 @@ docker-compose -f docker-compose.local.yml exec web python manage.py createsuper
 
 ### Production Deployment
 
-1. Configure production environment:
-```bash
-cp .env.example .env.prod
-# Edit .env.prod with your production settings
-```
-
-2. Build and start the containers:
-```bash
-docker-compose -f docker-compose.prod.yml up --build -d
-```
-
-## Environment Variables
-
-### Local Development (.env.local)
-```
-DEBUG=True
-SECRET_KEY=your-secret-key
-ALLOWED_HOSTS=127.0.0.1
-
-# Database settings
-DB_NAME=imagesharing_local
-DB_USER=imagesharing_user
-DB_PASSWORD=your-password
-DB_HOST=db
-DB_PORT=5432
-
-# Local storage settings
-USE_S3=False
-```
-
-### Production (.env.prod)
-```
-DEBUG=False
-SECRET_KEY=your-secure-secret-key
-ALLOWED_HOSTS=your-domain.com,www.your-domain.com
-
-# Database settings
-DB_NAME=imagesharing
-DB_USER=imagesharing_user
-DB_PASSWORD=your-secure-password
-DB_HOST=db
-DB_PORT=5432
-
-# AWS S3 settings
-USE_S3=True
-AWS_ACCESS_KEY_ID=your-aws-access-key
-AWS_SECRET_ACCESS_KEY=your-aws-secret-key
-AWS_STORAGE_BUCKET_NAME=your-bucket-name
-AWS_S3_REGION_NAME=your-region
-```
+For detailed production deployment instructions, please see the [Deployment Guide](DEPLOYMENT.md).
 
 ## Development Commands
 
@@ -153,27 +90,19 @@ docker-compose -f docker-compose.local.yml exec web python manage.py migrate
 
 # Collect static files
 docker-compose -f docker-compose.local.yml exec web python manage.py collectstatic
-
-# Volume Management
-docker volume rm django-imagesharing-app_media    # Remove media volume
-docker volume rm django-imagesharing-app_static  # Remove static volume
-docker volume prune                              # Remove all unused volumes
-docker volume prune -f                           # Remove all volumes (including used ones)
 ```
 
-## Production Deployment
+## Data Persistence
 
-1. Set up AWS resources:
-   - Create an S3 bucket for media storage
-   - Configure IAM user with S3 access
-   - Set up SSL certificates
+The application uses Docker volumes for data persistence:
+- `image-sharing-app_media`: Stores user-uploaded images and files
+- `image-sharing-app_static`: Stores collected static files
+- `image-sharing-app_postgres_data`: Stores the PostgreSQL database data
 
-2. Configure domain and DNS settings
-
-3. Deploy the application:
-```bash
-docker-compose -f docker-compose.prod.yml up -d
-```
+Important notes:
+- Volume data is not pushed to GitHub
+- Each developer needs to set up their own volumes locally
+- In production, use proper backup strategies for volume data
 
 ## Contributing
 
@@ -193,4 +122,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Bootstrap
 - PostgreSQL
 - Nginx
-- AWS S3
+- Docker

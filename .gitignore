@@ -91,4 +91,7 @@ aws.credentials
 # Project specific
 media/
 staticfiles/
-uploads/ 
+uploads/
+
+# Nginx generated configs
+nginx/conf.d/local.conf 

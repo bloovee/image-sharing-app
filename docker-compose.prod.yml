@@ -51,6 +51,8 @@ services:
     depends_on:
       - web
     restart: always
+    environment:
+      - SERVER_IP=${SERVER_IP:-localhost}
 
 volumes:
   postgres_data:
