@@ -55,6 +55,24 @@
         margin-right: 5px;
       }
       
+      /* Custom logout button styling */
+      .btn-link.nav-link {
+        background: none;
+        border: none;
+        padding: 0.5rem 1rem;
+        color: rgba(255,255,255,.55);
+        text-decoration: none;
+      }
+      .btn-link.nav-link:hover {
+        color: rgba(255,255,255,.75);
+      }
+      body:not(.dark-mode) .btn-link.nav-link {
+        color: rgba(0,0,0,.55);
+      }
+      body:not(.dark-mode) .btn-link.nav-link:hover {
+        color: rgba(0,0,0,.75);
+      }
+      
       /* Light mode grayscale overrides */
       body:not(.dark-mode) .btn-outline-light {
         color: #fff;
@@ -146,7 +164,10 @@
           <ul class="navbar-nav">
             {% if user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+              <form action="{% url 'logout' %}" method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link nav-link">Logout</button>
+              </form>
             </li>
             {% else %}
             <li class="nav-item">
