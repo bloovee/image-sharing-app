@@ -1,5 +1,49 @@
 # Deployment Guide
 
+## Prerequisites
+
+Before proceeding with the deployment, ensure that Docker and Git are installed on your system:
+
+### Installing Git
+```bash
+# For Ubuntu/Debian
+sudo apt update
+sudo apt install git -y
+
+# For CentOS/RHEL
+sudo yum install git -y
+
+# Verify installation
+git --version
+```
+
+### Installing Docker and Docker Compose
+```bash
+# Install Docker on Ubuntu/Debian
+sudo apt update
+sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt update
+sudo apt install docker-ce -y
+
+# Start and enable Docker
+sudo systemctl start docker
+sudo systemctl enable docker
+
+# Install Docker Compose
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+# Verify installations
+docker --version
+docker-compose --version
+
+# Add your user to the docker group (optional, to run docker without sudo)
+sudo usermod -aG docker $USER
+# Note: You'll need to log out and back in for this change to take effect
+```
+
 ## Initial Setup
 
 1. Clone the repository:
@@ -24,24 +68,24 @@ Important environment variables for deployment:
 - `DB_NAME`, `DB_USER`, `DB_PASSWORD`: Database credentials
 - `SERVER_IP`: Your server's public IP address
 
-3. Set the SERVER_IP environment variable for your deployment:
-```bash
-export SERVER_IP=your-server-ip
-```
-
 ## Deployment
 
 1. Build and start the containers:
 ```bash
-docker-compose -f docker-compose.prod.yml up --build -d
+docker-compose -f docker-compose.prod.yml --env-file .env.prod up --build -d
 ```
 
-2. Create a superuser (optional):
+2. Run database migrations:
 ```bash
-docker-compose -f docker-compose.prod.yml exec web python manage.py createsuperuser
+docker-compose -f docker-compose.prod.yml --env-file .env.prod exec web python manage.py migrate
 ```
 
-3. Access the application:
+3. Create a superuser (optional):
+```bash
+docker-compose -f docker-compose.prod.yml --env-file .env.prod exec web python manage.py createsuperuser
+```
+
+4. Access the application:
 - Main site: http://your-server-ip
 - Admin interface: http://your-server-ip/admin
 
@@ -54,9 +98,8 @@ When pulling updates from git:
 git pull
 
 # Rebuild and restart containers
-export SERVER_IP=your-server-ip
-docker-compose -f docker-compose.prod.yml down
-docker-compose -f docker-compose.prod.yml up --build -d
+docker-compose -f docker-compose.prod.yml --env-file .env.prod down
+docker-compose -f docker-compose.prod.yml --env-file .env.prod up --build -d
 ```
 
 ## Storage Configuration
@@ -75,7 +118,7 @@ USE_S3=False
 
 2. Deploy your application as usual:
 ```bash
-docker-compose -f docker-compose.prod.yml up --build -d
+docker-compose -f docker-compose.prod.yml --env-file .env.prod up --build -d
 ```
 
 With this configuration, all media files will be stored in the Docker volume.
@@ -121,8 +164,8 @@ To switch to S3 storage after your application is already running:
 
 4. Restart your application:
    ```bash
-   docker-compose -f docker-compose.prod.yml down
-   docker-compose -f docker-compose.prod.yml up -d
+   docker-compose -f docker-compose.prod.yml --env-file .env.prod down
+   docker-compose -f docker-compose.prod.yml --env-file .env.prod up -d
    ```
 
 5. Migrate existing media files (optional):
