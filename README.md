@@ -14,8 +14,8 @@ A modern image sharing application built with Django, featuring user authenticat
 
 ## Prerequisites
 
-- Docker
-- Docker Compose
+- Docker (20.10+ recommended) - [Install Docker](https://docs.docker.com/get-docker/)
+- Docker Compose (2.0+ recommended) - Included with Docker Desktop
 - Python 3.11+ (for local development)
 
 ## Project Structure
@@ -51,15 +51,20 @@ cp .env.example .env.local
 
 3. Build and start the containers:
 ```bash
-docker-compose -f docker-compose.local.yml up --build
+docker-compose -f docker-compose.local.yml --env-file .env.local up --build -d
 ```
 
-4. Create a superuser (optional):
+4. Run the database migrations:
 ```bash
-docker-compose -f docker-compose.local.yml exec web python manage.py createsuperuser
+docker-compose -f docker-compose.local.yml --env-file .env.local exec web python manage.py migrate
 ```
 
-5. Access the application:
+5. Create a superuser (optional):
+```bash
+docker-compose -f docker-compose.local.yml --env-file .env.local exec web python manage.py createsuperuser
+```
+
+6. Access the application:
 - Main site: http://127.0.0.1:8000
 - Admin interface: http://127.0.0.1:8000/admin
 
@@ -71,25 +76,25 @@ For detailed production deployment instructions, please see the [Deployment Guid
 
 ```bash
 # Start containers
-docker-compose -f docker-compose.local.yml up
+docker-compose -f docker-compose.local.yml --env-file .env.local up -d
 
 # Stop containers
-docker-compose -f docker-compose.local.yml down
+docker-compose -f docker-compose.local.yml --env-file .env.local down
 
 # Stop containers and remove volumes
-docker-compose -f docker-compose.local.yml down -v
+docker-compose -f docker-compose.local.yml --env-file .env.local down -v
 
 # View logs
-docker-compose -f docker-compose.local.yml logs -f
+docker-compose -f docker-compose.local.yml --env-file .env.local logs -f
 
 # Create superuser
-docker-compose -f docker-compose.local.yml exec web python manage.py createsuperuser
+docker-compose -f docker-compose.local.yml --env-file .env.local exec web python manage.py createsuperuser
 
 # Run migrations
-docker-compose -f docker-compose.local.yml exec web python manage.py migrate
+docker-compose -f docker-compose.local.yml --env-file .env.local exec web python manage.py migrate
 
 # Collect static files
-docker-compose -f docker-compose.local.yml exec web python manage.py collectstatic
+docker-compose -f docker-compose.local.yml --env-file .env.local exec web python manage.py collectstatic
 ```
 
 ## Data Persistence
@@ -103,6 +108,25 @@ Important notes:
 - Volume data is not pushed to GitHub
 - Each developer needs to set up their own volumes locally
 - In production, use proper backup strategies for volume data
+
+## Troubleshooting
+
+### Missing Nginx Directory
+If you encounter an error about a missing nginx directory, ensure that you have cloned the complete repository. The nginx directory contains configuration files needed for the web server and should be included in the repository.
+
+### File Permission Issues
+If you experience permission issues with media uploads or static files, fix the permissions by running:
+
+```bash
+docker-compose -f docker-compose.local.yml --env-file .env.local exec web chmod -R 755 /app/media
+docker-compose -f docker-compose.local.yml --env-file .env.local exec web chmod -R 755 /app/static
+```
+
+### Database Connection Issues
+If you encounter database connection errors, ensure:
+1. The PostgreSQL container is running (`docker-compose ps`)
+2. Your .env.local file has the correct database credentials
+3. You've run the migrations
 
 ## Contributing
 
