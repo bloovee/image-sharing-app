@@ -3,11 +3,12 @@ FROM nginx:1.25
 # Remove default nginx config
 RUN rm /etc/nginx/conf.d/default.conf
 
-# Copy template
+# Copy templates
 COPY conf.d/local.conf.template /etc/nginx/templates/default.conf.template
+COPY conf.d/prod.conf.template /etc/nginx/conf.d/prod.conf.template
 
 # Create directory for SSL certificates
-RUN mkdir -p /etc/nginx/ssl/live/your-domain.com
+RUN mkdir -p /etc/nginx/ssl/live/localhost
 
 # Use envsubst via entrypoint script
 COPY docker-entrypoint.sh /

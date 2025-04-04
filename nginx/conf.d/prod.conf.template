@@ -1,0 +1,19 @@
+upstream django {
+    server web:8000;
+}
+
+# Redirect HTTP to HTTPS if USE_SSL is true
+server {
+    listen 80;
+    server_name ${SERVER_IP};
+    client_max_body_size 100M;
+
+    # If SSL is enabled, redirect to HTTPS
+    ${SSL_REDIRECT}
+
+    # If SSL is disabled, configure for HTTP
+    ${HTTP_CONFIG}
+}
+
+# HTTPS server (only included if USE_SSL is true)
+${SSL_SERVER} 

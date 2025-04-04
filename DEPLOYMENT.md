@@ -10,7 +10,7 @@ Before proceeding with the deployment, ensure that Docker and Git are installed 
 sudo apt update
 sudo apt install git -y
 
-# For CentOS/RHEL
+# For CentOS/RHEL/Amazon Linux 2023
 sudo yum install git -y
 
 # Verify installation
@@ -26,6 +26,11 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 sudo apt update
 sudo apt install docker-ce -y
+
+# Install Docker on CentOS/RHEL/Amazon Linux 2023
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum install docker-ce docker-ce-cli containerd.io -y
 
 # Start and enable Docker
 sudo systemctl start docker
@@ -54,7 +59,7 @@ cd image-sharing-app
 
 2. Create and configure environment files:
 ```bash
-cp .env.example .env.prod
+cp .env.prod.example .env.prod
 # Edit .env.prod with your settings
 ```
 
@@ -63,10 +68,12 @@ cp .env.example .env.prod
 Important environment variables for deployment:
 
 - `DEBUG`: Set to 'False' for production
-- `SECRET_KEY`: Set a secure secret key
+- `SECRET_KEY`: Set a secure secret key (use a random string generator, e.g., `python -c "import secrets; print(secrets.token_urlsafe(50))"`)
 - `ALLOWED_HOSTS`: Comma-separated list of allowed hosts (include your server IP)
 - `DB_NAME`, `DB_USER`, `DB_PASSWORD`: Database credentials
 - `SERVER_IP`: Your server's public IP address
+- `USE_SSL`: Set to 'true' to enable HTTPS (requires SSL certificates)
+- `DOMAIN_NAME`: Your domain name (used for SSL configuration)
 
 ## Deployment
 
@@ -101,6 +108,31 @@ git pull
 docker-compose -f docker-compose.prod.yml --env-file .env.prod down
 docker-compose -f docker-compose.prod.yml --env-file .env.prod up --build -d
 ```
+
+## SSL Configuration
+
+The application can run with or without SSL. By default, it runs over HTTP. To enable HTTPS:
+
+1. Set `USE_SSL=true` in your `.env.prod` file
+2. Set `DOMAIN_NAME=your-domain.com` in your `.env.prod` file
+3. Mount your SSL certificates by uncommenting this line in docker-compose.prod.yml:
+   ```yaml
+   # - ./ssl:/etc/nginx/ssl
+   ```
+4. Ensure your SSL certificates are in the `./ssl` directory with the following structure:
+   ```
+   ssl/
+   └── live/
+       └── your-domain.com/
+           ├── fullchain.pem
+           └── privkey.pem
+   ```
+5. Deploy your application as usual:
+   ```bash
+   docker-compose -f docker-compose.prod.yml --env-file .env.prod up --build -d
+   ```
+
+If you don't have SSL certificates, keep `USE_SSL=false` and the application will run over HTTP.
 
 ## Storage Configuration
 

@@ -32,8 +32,10 @@ staticfiles/
 .env
 .env.local
 .env.prod
-.env.*
+.env.development
+# Allow example files
 !.env.example
+!.env.*.example
 
 # Virtual Environment
 venv/
