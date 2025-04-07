@@ -128,16 +128,41 @@ def logout_view(request):
 
 @login_required
 def profile_settings(request):
+    print(f"Profile settings view accessed by {request.user.username}")
+    print(f"Request method: {request.method}")
+    
     if request.method == 'POST':
+        print(f"Request POST data keys: {request.POST.keys()}")
+        print(f"Request FILES keys: {request.FILES.keys() if request.FILES else 'No files'}")
+        
         form = UserProfileForm(request.POST, request.FILES, user=request.user)
+        print(f"Form is bound: {form.is_bound}")
+        
         if form.is_valid():
+            print("Form is valid")
             try:
-                form.save()
+                # Debug logging for avatar upload
+                if 'avatar' in request.FILES:
+                    print(f"Avatar upload detected: {request.FILES['avatar']}")
+                    print(f"File size: {request.FILES['avatar'].size} bytes")
+                    print(f"Content type: {request.FILES['avatar'].content_type}")
+                
+                profile = form.save()
+                
+                # Debug logging for saved profile
+                if profile.avatar:
+                    print(f"Avatar URL after save: {profile.avatar.url}")
+                    print(f"Avatar path: {profile.avatar.path}")
+                
                 messages.success(request, 'Profile updated successfully!')
                 return redirect('profile_settings')
             except Exception as e:
+                print(f"Error in profile update: {str(e)}")
+                import traceback
+                print(traceback.format_exc())
                 messages.error(request, f'Error updating profile: {str(e)}')
         else:
+            print(f"Form errors: {form.errors}")
             messages.error(request, 'Please correct the errors below.')
     else:
         form = UserProfileForm(user=request.user)
