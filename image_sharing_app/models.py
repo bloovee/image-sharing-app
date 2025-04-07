@@ -11,6 +11,8 @@ def user_avatar_path(instance, filename):
     ext = filename.split('.')[-1]
     # Create a new filename using user's username
     filename = f"{instance.user.username}.{ext}"
+    # Debug print
+    print(f"Avatar path function called: generating path 'avatars/{filename}'")
     return os.path.join('avatars', filename)
 
 class UserProfile(models.Model):
@@ -25,7 +27,9 @@ class UserProfile(models.Model):
 
     def get_avatar_url(self):
         if self.avatar:
+            print(f"Avatar exists, URL: {self.avatar.url}")
             return self.avatar.url
+        print("No avatar, returning default")
         return "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
 
     def delete(self, *args, **kwargs):
