@@ -1,0 +1,38 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+
+{% block content %}
+<div id="content-main">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="module">
+            <h2>Import Images from CSV</h2>
+            <div class="form-row">
+                <p>Select a CSV file to import images.</p>
+                <p>CSV should include the following columns: id, title, image_path, description, author_id, author_username, created_at, like_count</p>
+            </div>
+            
+            <div class="form-row">
+                <label for="csv_file">CSV File:</label>
+                <input type="file" name="csv_file" id="csv_file" required>
+            </div>
+            
+            <div class="form-row">
+                <label for="skip_existing">Skip existing images:</label>
+                <input type="checkbox" name="skip_existing" id="skip_existing">
+                <span class="help">If checked, existing images will be skipped. Otherwise, they will be updated.</span>
+            </div>
+            
+            <div class="form-row">
+                <label for="skip_missing_files">Skip missing image files:</label>
+                <input type="checkbox" name="skip_missing_files" id="skip_missing_files">
+                <span class="help">If checked, images with missing files will be skipped. Otherwise, empty placeholders will be created.</span>
+            </div>
+            
+            <div class="submit-row">
+                <input type="submit" class="default" value="Import" name="_import">
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %} 

@@ -1,0 +1,32 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+
+{% block content %}
+<div id="content-main">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="module">
+            <h2>Import Users from CSV</h2>
+            <div class="form-row">
+                <p>Select a CSV file to import users and their profiles.</p>
+                <p>CSV should include the following columns: id, username, email, first_name, last_name, is_active, is_staff, is_superuser, date_joined, last_login, bio, created_at, updated_at</p>
+            </div>
+            
+            <div class="form-row">
+                <label for="csv_file">CSV File:</label>
+                <input type="file" name="csv_file" id="csv_file" required>
+            </div>
+            
+            <div class="form-row">
+                <label for="skip_existing">Skip existing users:</label>
+                <input type="checkbox" name="skip_existing" id="skip_existing">
+                <span class="help">If checked, existing users will be skipped. Otherwise, they will be updated.</span>
+            </div>
+            
+            <div class="submit-row">
+                <input type="submit" class="default" value="Import" name="_import">
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %} 

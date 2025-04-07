@@ -1,0 +1,62 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block extrahead %}
+  {{ block.super }}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+{% endblock %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <style>
+    #header {
+      position: relative;
+    }
+    
+    .data-management-link {
+      background: #417690;
+      border-radius: 4px;
+      color: white;
+      display: inline-block;
+      font-size: 14px;
+      padding: 6px 12px;
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-decoration: none;
+      top: 50%;
+      width: auto;
+    }
+    
+    .data-management-link:hover {
+      background: #285e80;
+      color: white;
+      text-decoration: none;
+    }
+    
+    /* Move to right corner on tablet/medium screens */
+    @media (max-width: 1024px) and (min-width: 768px) {
+      .data-management-link {
+        left: auto;
+        right: 20px;
+        transform: translateY(-50%);
+      }
+    }
+    
+    /* Hide on mobile */
+    @media (max-width: 767px) {
+      .data-management-link {
+        display: none;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block usertools %}
+  {{ block.super }}
+  {% if user.is_staff %}
+    <a href="/admin/data-management/" class="data-management-link">
+      <i class="fa fa-database"></i> Data Management
+    </a>
+  {% endif %}
+{% endblock %} 
