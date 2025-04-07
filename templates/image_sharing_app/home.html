@@ -1,6 +1,38 @@
 {% extends "image_sharing_app/base.html" %}
 {% block title %}Home - ImageShare{% endblock %}
 
+{% block extra_css %}
+<style>
+    .card-title {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        height: 2.5rem; /* Approximately 2 lines of text */
+        margin-bottom: 0.5rem;
+    }
+    
+    .card-description {
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        height: 6rem; /* Approximately 4 lines of text */
+        margin-bottom: 0.75rem;
+    }
+    
+    .image-card .card-body {
+        height: 230px; /* Fixed height for card body */
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .card-text.user-info {
+        margin-top: auto;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row">
     {% for image in images %}
@@ -9,7 +41,7 @@
             <img src="{{ image.image.url }}" class="card-img-top" alt="{{ image.title }}">
             <div class="card-body">
                 <h5 class="card-title">{{ image.title }}</h5>
-                <p class="card-text">{{ image.description|truncatewords:30 }}</p>
+                <p class="card-text card-description">{{ image.description }}</p>
                 <p class="card-text user-info">
                     <small class="text-muted">
                         <a href="{% url 'user_profile' image.author.username %}" class="author-link" style="display: inline-flex; align-items: center;">

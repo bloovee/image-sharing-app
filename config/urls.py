@@ -18,8 +18,23 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from image_sharing_app.admin import (
+    admin_data_management_view, 
+    admin_export_all_view, 
+    admin_import_all_view
+)
 
 urlpatterns = [
+    # Custom admin views
+    path('admin/data-management/', admin_data_management_view, name='admin_data_management'),
+    path('admin/export-all/', admin_export_all_view, name='admin_export_all'),
+    path('admin/import-all/', admin_import_all_view, name='admin_import_all'),
+    
+    # Standard URLs
     path('admin/', admin.site.urls),
     path('', include('image_sharing_app.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

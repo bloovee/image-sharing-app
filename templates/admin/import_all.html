@@ -1,0 +1,295 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <style>
+    .data-card {
+      background-color: #2C3E50;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      margin-bottom: 20px;
+      padding: 20px;
+      color: #ffffff;
+    }
+    
+    .card-title {
+      border-bottom: 1px solid #4a5c6e;
+      color: #ffffff;
+      font-size: 18px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+    }
+    
+    .radio-option {
+      display: block;
+      margin: 10px 0;
+      padding: 5px 0;
+    }
+    
+    .radio-option label {
+      color: #ffffff;
+      font-weight: 500;
+    }
+    
+    .radio-option input[type="radio"] {
+      margin-right: 10px;
+    }
+    
+    .option-description {
+      color: #ecf0f1;
+      display: block;
+      font-size: 13px;
+      margin: 5px 0 5px 24px;
+    }
+    
+    .file-upload {
+      margin: 20px 0;
+      color: #ffffff;
+    }
+    
+    .file-upload label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    
+    .checkbox-option {
+      display: block;
+      margin: 10px 0;
+    }
+    
+    .checkbox-option label {
+      color: #ffffff;
+      font-weight: 500;
+    }
+    
+    .checkbox-option input {
+      margin-right: 10px;
+    }
+    
+    .submit-row {
+      margin-top: 20px;
+    }
+    
+    .csv-format {
+      background: #34495e;
+      border-left: 3px solid #3498db;
+      font-family: monospace;
+      margin: 10px 0;
+      padding: 10px;
+      overflow-x: auto;
+      color: #e6e6e6;
+    }
+    
+    .btn {
+      background-color: #f8f8f8;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      color: #1a2631 !important;
+      display: inline-block;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      padding: 5px 10px;
+      text-decoration: none;
+    }
+    
+    .btn:hover {
+      background-color: #f0f0f0;
+      color: #0d1318 !important;
+      text-decoration: none;
+    }
+    
+    button.default {
+      background-color: #3498db;
+      border: none;
+      border-radius: 4px;
+      color: #ffffff !important;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 8px 16px;
+      text-decoration: none;
+    }
+    
+    button.default:hover {
+      background-color: #2980b9;
+    }
+    
+    strong {
+      color: #ffffff;
+    }
+
+    .import-instructions {
+      background-color: #3498db;
+      border-left: 5px solid #2980b9;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      padding: 15px;
+    }
+
+    .import-instructions h3 {
+      color: #ffffff;
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    .import-instructions ol {
+      margin: 10px 0 0 20px;
+      padding: 0;
+    }
+
+    .import-instructions li {
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .import-instructions p {
+      color: #ffffff;
+      margin: 10px 0 0;
+    }
+
+    .import-warning {
+      background-color: #e74c3c;
+      border-radius: 4px;
+      color: #ffffff;
+      font-weight: 500;
+      margin-top: 15px;
+      padding: 10px;
+    }
+    
+    /* Styling for error messages */
+    .errorlist {
+      background-color: #e74c3c;
+      border-left: 5px solid #c0392b;
+      border-radius: 4px;
+      color: #ffffff;
+      list-style: none;
+      margin: 0 0 20px 0;
+      padding: 15px;
+    }
+    
+    .errorlist li {
+      margin: 0;
+      padding: 0;
+    }
+    
+    .text-warning {
+      color: #f1c40f;
+      font-weight: bold;
+    }
+    
+    /* Message styling */
+    .messagelist {
+      margin: 0 0 20px 0;
+      padding: 0;
+      list-style-type: none;
+    }
+    
+    .messagelist li {
+      border-radius: 4px;
+      margin-bottom: 10px;
+      padding: 15px;
+      color: #ffffff;
+    }
+    
+    .messagelist li.success {
+      background-color: #2ecc71;
+      border-left: 5px solid #27ae60;
+    }
+    
+    .messagelist li.error {
+      background-color: #e74c3c;
+      border-left: 5px solid #c0392b;
+    }
+    
+    .messagelist li.warning {
+      background-color: #f39c12;
+      border-left: 5px solid #d35400;
+    }
+    
+    .messagelist li.info {
+      background-color: #3498db;
+      border-left: 5px solid #2980b9;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  <a href="/admin/data-management/" class="btn">← Back to Data Management</a>
+  
+  <div class="import-instructions">
+    <h3>Important: Follow the Correct Import Order</h3>
+    <ol>
+      <li><strong>Users First:</strong> Always import users before importing any other data.</li>
+      <li><strong>Images Second:</strong> Import images after users are imported.</li>
+      <li><strong>Comments Last:</strong> Import comments only after both users and images are imported.</li>
+    </ol>
+    <p>Following this order will prevent errors from missing references.</p>
+    <div class="import-warning">
+      <strong>Note:</strong> Importing images without the referenced users will fail. Similarly, importing comments requires both the referenced users and images to exist in the system.
+    </div>
+  </div>
+  
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <div class="data-card">
+      <h2 class="card-title">Select Import Type</h2>
+      
+      <div class="radio-option">
+        <input type="radio" name="import_type" id="import_type_users" value="users" checked>
+        <label for="import_type_users">Import Users</label>
+        <span class="option-description">
+          Import user data including user profiles.<br>
+          <strong>CSV Format:</strong>
+          <div class="csv-format">id, username, email, first_name, last_name, is_active, is_staff, is_superuser, date_joined, last_login, bio, created_at, updated_at</div>
+        </span>
+      </div>
+      
+      <div class="radio-option">
+        <input type="radio" name="import_type" id="import_type_images" value="images">
+        <label for="import_type_images">Import Images</label>
+        <span class="option-description">
+          Import image data.<br>
+          <strong>CSV Format:</strong>
+          <div class="csv-format">id, title, image_path, description, author_id, author_username, created_at, like_count</div>
+        </span>
+      </div>
+      
+      <div class="radio-option">
+        <input type="radio" name="import_type" id="import_type_comments" value="comments">
+        <label for="import_type_comments">Import Comments</label>
+        <span class="option-description">
+          Import comment data.<br>
+          <strong>CSV Format:</strong>
+          <div class="csv-format">id, parent_image_id, parent_image_title, author_id, author_username, content, created_at</div>
+        </span>
+      </div>
+      
+      <div class="file-upload">
+        <label for="csv_file">Upload CSV File:</label>
+        <input type="file" name="csv_file" id="csv_file" required>
+      </div>
+      
+      <div class="checkbox-option">
+        <input type="checkbox" name="skip_existing" id="skip_existing">
+        <label for="skip_existing">Skip existing records</label>
+        <span class="option-description">If checked, existing records will be skipped. Otherwise, they will be updated.</span>
+      </div>
+      
+      <div class="checkbox-option">
+        <input type="checkbox" name="skip_missing_files" id="skip_missing_files">
+        <label for="skip_missing_files">Skip entries with missing files</label>
+        <span class="option-description">For images, if checked, entries with missing image files will be skipped. Otherwise, empty placeholders will be created.</span>
+      </div>
+      
+      <div class="submit-row">
+        <button type="submit" class="default">Import Data</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %} 
