@@ -63,12 +63,14 @@ class UserProfileForm(forms.ModelForm):
                 self.add_error('avatar', _('File must be a valid image (JPG, PNG, or GIF).'))
 
         # Handle password change
-        current_password = cleaned_data.get('current_password')
-        new_password = cleaned_data.get('new_password')
-        confirm_password = cleaned_data.get('confirm_password')
+        current_password = cleaned_data.get('current_password', '')
+        new_password = cleaned_data.get('new_password', '')
+        confirm_password = cleaned_data.get('confirm_password', '')
 
-        if any([current_password, new_password, confirm_password]):
-            if not all([current_password, new_password, confirm_password]):
+        # Only validate password if user has entered anything in any password field
+        if current_password or new_password or confirm_password:
+            # Check if all required password fields are provided
+            if not (current_password and new_password and confirm_password):
                 self.add_error(None, _('All password fields must be filled to change password.'))
             elif not self.user.check_password(current_password):
                 self.add_error('current_password', _('Current password is incorrect.'))
