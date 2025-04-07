@@ -27,7 +27,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Create media directory and set permissions
-RUN mkdir -p /app/media/avatars /app/media/exports /app/media/imports && \
+RUN mkdir -p /app/media/avatars /app/media/images && \
     chmod -R 777 /app/media
 
 # Collect static files

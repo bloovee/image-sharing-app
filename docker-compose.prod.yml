@@ -5,6 +5,9 @@ services:
     build: .
     command: >
       bash -c "
+        # Create media directory if it doesn't exist
+        mkdir -p /app/media/avatars /app/media/images
+        
         # Wait for db to be ready
         while ! nc -z db 5432; do
           echo 'Waiting for database...'
@@ -23,7 +26,7 @@ services:
       "
     volumes:
       - static_volume:/app/staticfiles
-      - media_volume:/app/media
+      - ./media:/app/media
     env_file:
       - .env.prod
     depends_on:
@@ -46,7 +49,7 @@ services:
     build: ./nginx
     volumes:
       - static_volume:/app/staticfiles
-      - media_volume:/app/media
+      - ./media:/app/media
       # To enable SSL, uncomment the line below and mount your SSL certificates
       # - ./ssl:/etc/nginx/ssl
     ports:

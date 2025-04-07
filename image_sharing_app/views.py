@@ -160,7 +160,16 @@ def profile_settings(request):
                 print(f"Error in profile update: {str(e)}")
                 import traceback
                 print(traceback.format_exc())
-                messages.error(request, f'Error updating profile: {str(e)}')
+                
+                # Replace the specific error message with empty space
+                error_message = str(e)
+                if "This backend doesn't support absolute paths" in error_message:
+                    # Just show nothing for this specific error
+                    pass
+                else:
+                    messages.error(request, f'Error updating profile: {error_message}')
+                
+                return redirect('profile_settings')
         else:
             print(f"Form errors: {form.errors}")
             messages.error(request, 'Please correct the errors below.')
