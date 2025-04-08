@@ -4,7 +4,7 @@
   <div class="col-md-8">
     <div class="card">
       <img
-        src="{{ image.image.url }}"
+        src="{{ image.image.url|cut:'@' }}"
         class="card-img-top"
         alt="{{ image.title }}"
       />

@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from .models import Image, Comment, UserProfile
 from .forms import ImageUploadForm, CommentForm, UserRegisterForm, UserProfileForm
+
+def health_check(request):
+    return HttpResponse("OK", status=200)
 
 def home(request):
     images = Image.objects.all().order_by('-created_at')
